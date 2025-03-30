@@ -60,36 +60,35 @@ export default function WeatherApp() {
     }
   };
 
-  if (!isLoggedIn) {
-    return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${Bgg})` }}>
-        <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }} className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-          <h2 className="text-3xl font-bold text-green-700 text-center">🌿 Login</h2>
-          <form onSubmit={handleLogin} className="mt-6 space-y-4">
-            <input type="text" placeholder="Username" className="w-full p-2 border rounded-lg" value={loginDetails.username} onChange={(e) => setLoginDetails({ ...loginDetails, username: e.target.value })} required />
-            <input type="password" placeholder="Password" className="w-full p-2 border rounded-lg" value={loginDetails.password} onChange={(e) => setLoginDetails({ ...loginDetails, password: e.target.value })} required />
-            {passwordError && <p className="text-red-600 text-sm">{passwordError}</p>}
-            <input type="text" placeholder="Phone Number" className="w-full p-2 border rounded-lg" value={loginDetails.phone} onChange={(e) => setLoginDetails({ ...loginDetails, phone: e.target.value })} required />
-            <button type="button" onClick={sendOTP} className="w-full bg-blue-500 text-white py-2 rounded-lg">Send OTP</button>
-            {otpSent && <input type="text" placeholder="Enter OTP" className="w-full p-2 border rounded-lg" value={loginDetails.otp} onChange={(e) => setLoginDetails({ ...loginDetails, otp: e.target.value })} required />}
-            {otpError && <p className="text-red-600">Invalid OTP. Please try again.</p>}
-            <button type="submit" className="w-full bg-green-500 text-white py-2 rounded-lg">Login</button>
+  return (
+    <motion.div className={isLoggedIn ? "weather-app-container" : "login-container"} style={{ backgroundImage: `url(${Bgg})` }}>
+      {!isLoggedIn ? (
+        <motion.div className="login-box">
+          <h2>🌿 Login</h2>
+          <form onSubmit={handleLogin}>
+            <input type="text" placeholder="Username" value={loginDetails.username} onChange={(e) => setLoginDetails({ ...loginDetails, username: e.target.value })} required />
+            <input type="password" placeholder="Password" value={loginDetails.password} onChange={(e) => setLoginDetails({ ...loginDetails, password: e.target.value })} required />
+            {passwordError && <p className="error">{passwordError}</p>}
+            <input type="text" placeholder="Phone Number" value={loginDetails.phone} onChange={(e) => setLoginDetails({ ...loginDetails, phone: e.target.value })} required />
+            <button type="button" onClick={sendOTP}>Send OTP</button>
+            {otpSent && <input type="text" placeholder="Enter OTP" value={loginDetails.otp} onChange={(e) => setLoginDetails({ ...loginDetails, otp: e.target.value })} required />}
+            {otpError && <p className="error">Invalid OTP. Please try again.</p>}
+            <button type="submit">Login</button>
           </form>
         </motion.div>
-      </motion.div>
-    );
-  }
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${Bgg})` }}>
-      <motion.h1 initial={{ y: -50 }} animate={{ y: 0 }} transition={{ duration: 0.5 }} className="text-4xl font-extrabold text-green-700">🌿 Weather App</motion.h1>
-      <motion.input initial={{ scale: 0.9 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }} type="text" className="w-full max-w-lg p-3 border rounded-lg" placeholder="Enter City Name..." value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={search} />
-      {weather.loading && <Oval color="white" height={80} width={80} />}
-      {weather.error && <div className="text-red-600 text-2xl flex items-center gap-2"><FontAwesomeIcon icon={faFrown} /> City not found</div>}
-      {weather?.data?.main && (
-        <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }} className="mt-10 p-6 bg-white shadow-xl rounded-xl text-center">
-          <h2 className="text-3xl font-bold">{weather.data.name}, {weather.data.sys.country}</h2>
-          <p className="text-gray-700">{new Date().toLocaleDateString()}</p>
-          <p className="text-5xl font-extrabold text-blue-700">{Math.round(weather.data.main.temp)}°C</p>
+      ) : (
+        <motion.div>
+          <h1>🌿 Weather App</h1>
+          <input type="text" placeholder="Enter City Name..." value={input} onChange={(e) => setInput(e.target.value)} onKeyPress={search} />
+          {weather.loading && <Oval color="white" height={80} width={80} />}
+          {weather.error && <div className="error"><FontAwesomeIcon icon={faFrown} /> City not found</div>}
+          {weather?.data?.main && (
+            <div className="weather-box">
+              <h2>{weather.data.name}, {weather.data.sys.country}</h2>
+              <p>{new Date().toLocaleDateString()}</p>
+              <p>{Math.round(weather.data.main.temp)}°C</p>
+            </div>
+          )}
         </motion.div>
       )}
     </motion.div>
