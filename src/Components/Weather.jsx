@@ -42,28 +42,28 @@ export default function WeatherApp() {
     setPasswordError("");
     console.log("loginDetails:",loginDetails)
     if (generatedOTP && loginDetails.otp == generatedOTP) {
-      fetch('http://localhost:3002/create-user',{
+      fetch('http://localhost:3002/create-user', {
         method: 'POST',
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "application/json",
           Accept: "application/json"
         },
         body: JSON.stringify(loginDetails)
       })
-      .then(res=>res.json())
-      .then(data=>{
-        alert(data.message)
-        if(data.success){
-          setIsLoggedIn(true)
-        }
-        else{
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        if (data.success) {
+          setIsLoggedIn(true);
+        } else {
           setIsLoggedIn(false);
         }
       })
-      .catch(err=>{
-        console.log("Error in connecting to the Server:",err)
-        setIsLoggedIn(false)
-      })
+      .catch(err => {
+        console.log("Error in connecting to the Server:", err);
+        setIsLoggedIn(false);
+      });
+      
     } else {
       setOtpError(true);
     }
